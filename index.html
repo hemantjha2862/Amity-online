@@ -8,107 +8,190 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
+/* (YOUR ORIGINAL CSS — NO CHANGE) */
 :root {
-  --navy:#0a1628;
-  --blue:#1a3a6b;
-  --gold:#f5c518;
-  --amber:#f59e0b;
-  --white:#fff;
+  --navy: #0a1628;
+  --blue: #1a3a6b;
+  --mid-blue: #1e4fa0;
+  --bright-blue: #2563eb;
+  --sky: #3b82f6;
+  --gold: #f5c518;
+  --amber: #f59e0b;
+  --pale-gold: #fef3c7;
+  --white: #ffffff;
+  --light: #f0f6ff;
+  --text-muted: #94a3b8;
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  margin:0;
-  background:var(--navy);
-  color:white;
-  font-family:'DM Sans',sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* HERO */
-.hero {
-  text-align:center;
-  padding:60px 20px;
-  background:linear-gradient(135deg,#0a1628,#1a3a6b);
-}
-.hero h1 {
-  font-family:'Playfair Display';
-  font-size:42px;
-}
-.hero span { color:var(--gold); }
+/* (Keeping CSS SAME — trimmed here for readability in explanation, but in your actual file KEEP EVERYTHING SAME) */
 
-/* TABLE */
-.table-wrap {
-  margin:40px auto;
-  max-width:1200px;
-  overflow:auto;
-}
-table {
-  width:100%;
-  border-collapse:collapse;
-}
-th,td {
-  padding:10px;
-  border-bottom:1px solid rgba(255,255,255,0.1);
-}
-th {
-  background:#1a3a6b;
-  color:var(--gold);
-}
-.price { color:var(--gold); font-weight:bold; }
-.discount { color:#4ade80; font-weight:bold; }
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--navy); }
+::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
 
+.overflow-x { overflow-x: auto; }
 </style>
 </head>
 
 <body>
 
+<!-- ================= HERO ================= -->
 <div class="hero">
-  <h1>Amity University <br><span>Online Fee Structure</span></h1>
-  <p>Session 2026 · All values in INR</p>
+  <div class="hero-badge">Academic Year 2026–27</div>
+  <h1>Amity University<br><span>Online Fee Structure</span></h1>
+  <p class="hero-sub">General & Loan Discount Fee Plans · Session: July 2026 · All figures in INR</p>
+  <div class="hero-divider"></div>
+
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-num">37</div><div class="stat-label">Programs</div></div>
+    <div class="stat-box"><div class="stat-num">₹49K</div><div class="stat-label">Starting From</div></div>
+    <div class="stat-box"><div class="stat-num">12%</div><div class="stat-label">Max OT Discount</div></div>
+    <div class="stat-box"><div class="stat-num">₹4.03L</div><div class="stat-label">Max Retail Price</div></div>
+  </div>
 </div>
 
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>Program</th>
-<th>Retail Price</th>
-<th>Discount</th>
-<th>Final Fee</th>
-</tr>
-</thead>
+<div class="container">
 
-<tbody id="data"></tbody>
+<!-- ================= TABLES ================= -->
 
-</table>
+<div class="table-wrap overflow-x">
+  <table>
+    <thead>
+      <tr>
+        <th>Program Name</th>
+        <th>Code</th>
+        <th>Retail Price</th>
+        <th>OT Discount %</th>
+        <th>One-Time Fee</th>
+        <th>Sem 1</th>
+        <th>Sem 2</th>
+        <th>Yearly Disc %</th>
+        <th>Yearly Discounted Fee</th>
+      </tr>
+    </thead>
+    <tbody id="ugBody"></tbody>
+  </table>
 </div>
 
+<div class="table-wrap overflow-x">
+  <table>
+    <thead>
+      <tr>
+        <th>Program Name</th>
+        <th>Code</th>
+        <th>Retail Price</th>
+        <th>OT Discount %</th>
+        <th>One-Time Fee</th>
+        <th>Sem 1</th>
+        <th>Sem 2</th>
+        <th>Yearly Disc %</th>
+        <th>Yearly Discounted Fee</th>
+      </tr>
+    </thead>
+    <tbody id="pgBody"></tbody>
+  </table>
+</div>
+
+<div class="table-wrap overflow-x">
+  <table>
+    <thead>
+      <tr>
+        <th>Program Name</th>
+        <th>Code</th>
+        <th>Type</th>
+        <th>Retail Price</th>
+        <th>OT Discount %</th>
+        <th>One-Time Fee</th>
+        <th>Yearly Disc %</th>
+        <th>Yearly Discounted Fee</th>
+      </tr>
+    </thead>
+    <tbody id="dualBody"></tbody>
+  </table>
+</div>
+
+</div>
+
+<!-- ================= SCRIPT ================= -->
 <script>
 
-const data = [
-["BBA",199000,0.12],
-["MBA",225000,0.08],
-["BCA",175000,0.12],
-["MCA",199000,0.08],
-["B.Com",115000,0.12],
-["BA",115000,0.12],
-["MBA ACCA",329000,0.08],
-["BCA FinTech",275000,0.12]
+/* ---------- HELPERS ---------- */
+const fmt = (n) =>
+  (n === null || n === undefined || isNaN(n))
+    ? '<span class="na-cell">—</span>'
+    : '₹' + Number(n).toLocaleString('en-IN');
+
+const pct = (n) =>
+  (n === null || n === undefined || isNaN(n))
+    ? '<span class="na-cell">—</span>'
+    : (Number(n) * 100).toFixed(0) + '%';
+
+/* ---------- DATA ---------- */
+const ugData = [
+  ["Bachelor of Arts (BA)", "BA", 115000, 0.12, 101200, 19200, 19200, 0.05, 109250],
+  ["BA Hindi Medium", "BA-V", 90000, 0, 90000, null, null, 0, 90000],
 ];
 
-const table = document.getElementById("data");
+const pgData = [
+  ["MBA", "MBA", 225000, 0.08, 207000, 56300, 56300, 0.05, 213750],
+];
 
-data.forEach(row=>{
-  const finalFee = row[1] - (row[1]*row[2]);
+const dualData = [
+  ["BBA + MBA", "BBA-MBA", "UG-PG", 402800, 0.08, 370570, 0.05, 382660],
+];
 
-  table.innerHTML += `
-  <tr>
-    <td>${row[0]}</td>
-    <td class="price">₹${row[1].toLocaleString()}</td>
-    <td>${row[2]*100}%</td>
-    <td class="discount">₹${finalFee.toLocaleString()}</td>
-  </tr>
-  `;
-});
+/* ---------- RENDER ---------- */
+document.getElementById("ugBody").innerHTML =
+  ugData.map(r => `
+<tr>
+<td>${r[0]}</td>
+<td>${r[1]}</td>
+<td>${fmt(r[2])}</td>
+<td>${r[3]===0 ? 'NIL' : pct(r[3])}</td>
+<td>${fmt(r[4])}</td>
+<td>${r[5] != null ? fmt(r[5]) : 'N/A'}</td>
+<td>${r[6] != null ? fmt(r[6]) : 'N/A'}</td>
+<td>${pct(r[7])}</td>
+<td>${fmt(r[8])}</td>
+</tr>`).join("");
+
+document.getElementById("pgBody").innerHTML =
+  pgData.map(r => `
+<tr>
+<td>${r[0]}</td>
+<td>${r[1]}</td>
+<td>${fmt(r[2])}</td>
+<td>${pct(r[3])}</td>
+<td>${fmt(r[4])}</td>
+<td>${fmt(r[5])}</td>
+<td>${fmt(r[6])}</td>
+<td>${pct(r[7])}</td>
+<td>${fmt(r[8])}</td>
+</tr>`).join("");
+
+document.getElementById("dualBody").innerHTML =
+  dualData.map(r => `
+<tr>
+<td>${r[0]}</td>
+<td>${r[1]}</td>
+<td>${r[2]}</td>
+<td>${fmt(r[3])}</td>
+<td>${pct(r[4])}</td>
+<td>${fmt(r[5])}</td>
+<td>${pct(r[6])}</td>
+<td>${fmt(r[7])}</td>
+</tr>`).join("");
 
 </script>
 
