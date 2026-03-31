@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amity University Online — Fee Structure 2026</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --navy:#0a1628;
+  --blue:#1a3a6b;
+  --gold:#f5c518;
+  --amber:#f59e0b;
+  --white:#fff;
+}
+
+body {
+  margin:0;
+  background:var(--navy);
+  color:white;
+  font-family:'DM Sans',sans-serif;
+}
+
+/* HERO */
+.hero {
+  text-align:center;
+  padding:60px 20px;
+  background:linear-gradient(135deg,#0a1628,#1a3a6b);
+}
+.hero h1 {
+  font-family:'Playfair Display';
+  font-size:42px;
+}
+.hero span { color:var(--gold); }
+
+/* TABLE */
+.table-wrap {
+  margin:40px auto;
+  max-width:1200px;
+  overflow:auto;
+}
+table {
+  width:100%;
+  border-collapse:collapse;
+}
+th,td {
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+th {
+  background:#1a3a6b;
+  color:var(--gold);
+}
+.price { color:var(--gold); font-weight:bold; }
+.discount { color:#4ade80; font-weight:bold; }
+
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+  <h1>Amity University <br><span>Online Fee Structure</span></h1>
+  <p>Session 2026 · All values in INR</p>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Program</th>
+<th>Retail Price</th>
+<th>Discount</th>
+<th>Final Fee</th>
+</tr>
+</thead>
+
+<tbody id="data"></tbody>
+
+</table>
+</div>
+
+<script>
+
+const data = [
+["BBA",199000,0.12],
+["MBA",225000,0.08],
+["BCA",175000,0.12],
+["MCA",199000,0.08],
+["B.Com",115000,0.12],
+["BA",115000,0.12],
+["MBA ACCA",329000,0.08],
+["BCA FinTech",275000,0.12]
+];
+
+const table = document.getElementById("data");
+
+data.forEach(row=>{
+  const finalFee = row[1] - (row[1]*row[2]);
+
+  table.innerHTML += `
+  <tr>
+    <td>${row[0]}</td>
+    <td class="price">₹${row[1].toLocaleString()}</td>
+    <td>${row[2]*100}%</td>
+    <td class="discount">₹${finalFee.toLocaleString()}</td>
+  </tr>
+  `;
+});
+
+</script>
+
+</body>
+</html>
